@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>书易 - 校园二手书交易平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --background: #f8f9fa;
+            --text: #2c3e50;
+            --border: #e1e8ed;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        /* 书籍卡片 */
+        .book-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .book-header {
+            display: flex;
+            gap: 15px;
+        }
+
+        .book-cover {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .book-info {
+            flex: 1;
+        }
+
+        .book-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .book-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .book-price {
+            color: var(--danger);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .book-tag {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        /* 页面切换 */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* 搜索栏 */
+        .search-bar {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        /* 登录页样式 */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-text h1 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页 -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="logo">📚</div>
+            <div class="welcome-text">
+                <h1>书易</h1>
+                <p>校园二手书交易平台</p>
+                <p style="color: #666; margin-top: 10px;">让知识流动起来</p>
+            </div>
+            <button class="btn btn-success" onclick="navigateTo('home-page')" style="width: 100%; max-width: 300px;">
+                微信一键登录
+            </button>
+            <p style="font-size: 12px; color: #999; margin-top: 20px;">登录即代表同意《用户协议》</p>
+        </div>
+    </div>
+
+    <!-- 首页 -->
+    <div id="home-page" class="page">
+        <div class="container">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" class="search-input" placeholder="搜索教材、课程名称...">
+            </div>
+
+            <div class="book-card">
+                <div class="book-header">
+                    <div class="book-cover">软件工程<br>原理</div>
+                    <div class="book-info">
+                        <div class="book-title">《软件工程原理》</div>
+                        <div class="book-meta">张同学 · 计算机学院 · 软件工程</div>
+                        <div class="book-price">¥25.5</div>
+                        <span class="book-tag">九成新</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-header">
+                    <div class="book-cover">高等数学</div>
+                    <div class="book-info">
+                        <div class="book-title">《高等数学（第七版）》</div>
+                        <div class="book-meta">李同学 · 理学院 · 数学系</div>
+                        <div class="book-price">¥18.0</div>
+                        <span class="book-tag">有笔记</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="book-card">
+                <div class="book-header">
+                    <div class="book-cover">大学英语</div>
+                    <div class="book-info">
+                        <div class="book-title">《新视野大学英语》</div>
+                        <div class="book-meta">王同学 · 外国语学院</div>
+                        <div class="book-price">¥15.0</div>
+                        <span class="book-tag">全新</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布页 -->
+    <div id="publish-page" class="page">
+        <div class="container">
+            <h2 style="margin-bottom: 20px;">发布书籍</h2>
+            
+            <button class="btn btn-outline" style="width: 100%; margin-bottom: 20px;" onclick="simulateScan()">
+                📷 扫描ISBN码
+            </button>
+
+            <div class="form-group">
+                <label class="form-label">书名</label>
+                <input type="text" class="form-input" placeholder="请输入书名" id="book-title">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">作者</label>
+                <input type="text" class="form-input" placeholder="请输入作者" id="book-author">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">价格</label>
+                <input type="number" class="form-input" placeholder="请输入价格" id="book-price">
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%;" onclick="publishBook()">
+                确认发布
+            </button>
+        </div>
+    </div>
+
+    <!-- 底部导航 -->
+    <div class="navbar">
+        <div class="nav-item active" onclick="navigateTo('home-page')">
+            <span>🏠</span>
+            <span>首页</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('publish-page')">
+            <span>➕</span>
+            <span>发布</span>
+        </div>
+        <div class="nav-item" onclick="showMessage('收藏功能')">
+            <span>❤️</span>
+            <span>收藏</span>
+        </div>
+        <div class="nav-item" onclick="showMessage('个人中心')">
+            <span>👤</span>
+            <span>我的</span>
+        </div>
+    </div>
+
+    <script>
+        // 页面导航功能
+        function navigateTo(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+            
+            // 更新导航激活状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        // 模拟扫描功能
+        function simulateScan() {
+            alert('扫描功能已触发！\n模拟扫描到《软件工程原理》\n作者：张明 出版社：人民邮电出版社');
+            document.getElementById('book-title').value = '软件工程原理';
+            document.getElementById('book-author').value = '张明';
+            document.getElementById('book-price').value = '25.5';
+        }
+
+        // 发布书籍功能
+        function publishBook() {
+            const title = document.getElementById('book-title').value;
+            const author = document.getElementById('book-author').value;
+            const price = document.getElementById('book-price').value;
+            
+            if (!title || !author || !price) {
+                alert('请填写完整的书籍信息！');
+                return;
+            }
+            
+            alert(`发布成功！\n《${title}》\n作者：${author}\n价格：¥${price}`);
+            navigateTo('home-page');
+        }
+
+        // 显示提示信息
+        function showMessage(message) {
+            alert(`${message} 正在开发中...`);
+        }
+
+        // 初始化导航激活状态
+        document.querySelectorAll('.nav-item').forEach((item, index) => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
